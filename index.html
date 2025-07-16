@@ -33,15 +33,15 @@ body {
   height: 500px;
   perspective: 2000px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  background: #fff;
+  background: transparent; /* Transparent background */
   margin: auto;
 }
 
-#flipbook .page {
-  background: white;
-  border: 1px solid #ddd;
-  text-align: center;
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
+#flipbook .page,
+#flipbook .hard {
+  background: transparent !important; /* Remove white from blanks and covers */
+  border: none !important;
+  box-shadow: none !important;
 }
 
 #flipbook img {
@@ -50,12 +50,6 @@ body {
   object-fit: contain;
 }
 
-/* Hide empty pages */
-#flipbook .page:empty {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
 .button {
   position: absolute;
   top: 50%;
@@ -119,7 +113,7 @@ body {
 $(document).ready(function() {
   const flipbook = $("#flipbook");
 
-  // Initialize Flipbook (always double)
+  // Initialize Flipbook (always double mode)
   flipbook.turn({
     width: 800,
     height: 500,
@@ -150,21 +144,8 @@ $(document).ready(function() {
     if (!document.fullscreenElement) elem.requestFullscreen();
     else document.exitFullscreen();
   });
-
-  // Hide blank pages (after initialization)
-  $("#flipbook .page").each(function() {
-    if ($(this).html().trim() === "") {
-      $(this).css({
-        "background": "none",
-        "border": "none",
-        "box-shadow": "none",
-        "pointer-events": "none"
-      });
-    }
-  });
 });
 </script>
 
 </body>
 </html>
-

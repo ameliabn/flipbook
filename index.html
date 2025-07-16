@@ -33,15 +33,13 @@ body {
   height: 500px;
   perspective: 2000px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  background: transparent; /* Transparent background */
+  background: transparent;
   margin: auto;
 }
 
-#flipbook .page,
-#flipbook .hard {
-  background: transparent !important; /* Remove white from blanks and covers */
-  border: none !important;
-  box-shadow: none !important;
+#flipbook .page {
+  background: transparent;
+  border: none;
 }
 
 #flipbook img {
@@ -100,52 +98,9 @@ body {
   <div id="loading">Loading Flipbook...</div>
   <button id="prev" class="button">&#8592;</button>
   <div id="flipbook">
-    <div class="page"><img src="pages/page1.svg" alt="Page 1"></div>
-    <div class="page"><img src="pages/page2.svg" alt="Page 2"></div>
-    <div class="page"><img src="pages/page3.svg" alt="Page 3"></div>
-    <div class="page"><img src="pages/page4.svg" alt="Page 4"></div>
-  </div>
-  <button id="next" class="button">&#8594;</button>
-  <button id="fullscreen" class="button">&#x26F6;</button>
-</div>
+    <!-- Transparent first page filler -->
+    <div class="page"><img src="pages/transparent.png" alt=""></div>
 
-<script>
-$(document).ready(function() {
-  const flipbook = $("#flipbook");
+    <!-- Real pages -->
+    <div class="page"><img src="pages/page
 
-  // Initialize Flipbook (always double mode)
-  flipbook.turn({
-    width: 800,
-    height: 500,
-    autoCenter: true,
-    display: 'double',
-    gradients: true,
-    acceleration: true,
-    elevation: 50,
-    duration: 1200
-  });
-
-  // Hide loading after initialization
-  setTimeout(() => $("#loading").fadeOut(), 1000);
-
-  // Navigation buttons
-  $("#prev").click(() => flipbook.turn("previous"));
-  $("#next").click(() => flipbook.turn("next"));
-
-  // Keyboard navigation
-  $(document).keydown(e => {
-    if (e.key === "ArrowLeft") flipbook.turn("previous");
-    if (e.key === "ArrowRight") flipbook.turn("next");
-  });
-
-  // Fullscreen toggle
-  $("#fullscreen").click(() => {
-    const elem = document.documentElement;
-    if (!document.fullscreenElement) elem.requestFullscreen();
-    else document.exitFullscreen();
-  });
-});
-</script>
-
-</body>
-</html>

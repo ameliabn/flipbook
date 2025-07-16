@@ -29,13 +29,17 @@ body {
 }
 
 #flipbook {
-  width: 800px; /* Default for double-page view */
+  width: 800px;
   height: 500px;
   perspective: 2000px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   background: #fff;
   margin: auto;
-  transition: width 0.4s ease; /* Smooth resize */
+  transition: transform 0.4s ease;
+}
+
+#flipbook.single-view {
+  transform: translateX(200px); /* Shifts single page to center visually */
 }
 
 #flipbook .page {
@@ -114,7 +118,7 @@ body {
 $(document).ready(function() {
   const flipbook = $("#flipbook");
 
-  // Initialize Flipbook
+  // Initialize Flipbook (always in double mode)
   flipbook.turn({
     width: 800,
     height: 500,
@@ -146,17 +150,14 @@ $(document).ready(function() {
     else document.exitFullscreen();
   });
 
-  // Adjust layout after flip completes
+  // Apply single-view CSS class for first/last page
   flipbook.bind("turned", function(event, page) {
     const totalPages = flipbook.turn("pages");
     if (page === 1 || page === totalPages) {
-      flipbook.turn("display", "single");
-      flipbook.css("width", "400px");
+      flipbook.addClass("single-view");
     } else {
-      flipbook.turn("display", "double");
-      flipbook.css("width", "800px");
+      flipbook.removeClass("single-view");
     }
-    flipbook.turn("center");
   });
 });
 </script>

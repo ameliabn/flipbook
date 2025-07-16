@@ -1,123 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flipbook (No center gap)</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="turn.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flipbook</title>
 
-  <style>
-    body {
-      background: #f8f8f8;
-      margin: 0;
-      height: 100vh;
-      display: flex; justify-content: center; align-items: center;
-      overflow: auto;
-    }
-    #container { position: relative; }
-    #flipbook {
-      width: 800px; height: 500px;
-      background: transparent;
-      perspective: 2000px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      margin: auto;
-    }
-    /* Remove the Turn.js gap */
-    #flipbook .turn-page-wrapper {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    #flipbook .page {
-      background: transparent;
-      border: none;
-    }
-    #flipbook img {
-      width: 100%; height: 100%; object-fit: contain; display: block;
-    }
-    /* Center-fold shadow */
-    #flipbook::after {
-      content: '';
-      position: absolute;
-      top: 10%;
-      bottom: 10%;
-      left: 50%;
-      width: 4px;
-      background: rgba(0,0,0,0.1);
-      pointer-events: none;
-    }
-    /* Shadows on real first/last pages */
-    #flipbook .page:nth-child(2) {
-      box-shadow: inset 20px 0 30px -10px rgba(0,0,0,0.3);
-    }
-    #flipbook .page:nth-last-child(2) {
-      box-shadow: inset -20px 0 30px -10px rgba(0,0,0,0.3);
-    }
-    .button {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      font-size: 2em; background: rgba(255,255,255,0.9);
-      border:none; cursor:pointer; z-index:1000;
-      padding:10px 15px; border-radius:5px;
-    }
-    #prev { left:10px; }
-    #next { right:10px; }
-    #fullscreen { top:10px; right:10px; font-size:1.5em; }
-    .button:hover { background: rgba(255,255,255,1); }
-    #loading {
-      position: absolute; top:50%; left:50%;
-      transform: translate(-50%,-50%);
-      font-size:1.5em; background: rgba(255,255,255,0.95);
-      padding:10px 20px; border-radius:8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-  </style>
+<!-- Load jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Load Turn.js locally -->
+<script src="turn.min.js"></script>
+
+<style>
+body {
+  background: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+#flipbook {
+  width: 800px;
+  height: 500px;
+  perspective: 2000px; /* Add depth for desktop */
+}
+
+#flipbook .page {
+  background: white;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+#flipbook img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2em;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+#prev {
+  left: 20px;
+}
+
+#next {
+  right: 20px;
+}
+
+.button:hover {
+  background: rgba(255, 255, 255, 1);
+}
+</style>
 </head>
-
 <body>
-  <div id="container">
-    <div id="loading">Loading Flipbook…</div>
-    <button id="prev" class="button">&#8592;</button>
-    <div id="flipbook">
-      <!-- Transparent fillers -->
-      <div class="page"><img src="pages/transparent.png" alt=""></div>
-      <!-- Real pages -->
-      <div class="page"><img src="pages/page1.svg" alt="Page 1"></div>
-      <div class="page"><img src="pages/page2.svg" alt="Page 2"></div>
-      <div class="page"><img src="pages/page3.svg" alt="Page 3"></div>
-      <div class="page"><img src="pages/page4.svg" alt="Page 4"></div>
-      <div class="page"><img src="pages/transparent.png" alt=""></div>
-    </div>
-    <button id="next" class="button">&#8594;</button>
-    <button id="fullscreen" class="button">&#x26F6;</button>
-  </div>
 
-  <script>
-  $(function(){
-    const flip = $('#flipbook');
-    flip.turn({
-      width: 800, height: 500,
-      autoCenter: true, display: 'double',
-      gradients: true, acceleration: true,
-      elevation: 50, duration: 1200
-    });
+<button id="prev" class="button">&#8592;</button>
+<div id="flipbook">
+  <div class="page"><img src="pages/page1.svg" alt="Page 1"></div>
+  <div class="page"><img src="pages/page2.svg" alt="Page 2"></div>
+  <div class="page"><img src="pages/page3.svg" alt="Page 3"></div>
+  <div class="page"><img src="pages/page4.svg" alt="Page 4"></div>
+</div>
+<button id="next" class="button">&#8594;</button>
 
-    // Skip to first real page
-    flip.turn('page', 2);
-    setTimeout(() => $('#loading').fadeOut(), 1000);
-
-    $('#prev').click(() => flip.turn('previous'));
-    $('#next').click(() => flip.turn('next'));
-    $(document).keydown(e=> {
-      if (e.key === 'ArrowLeft') flip.turn('previous');
-      if (e.key === 'ArrowRight') flip.turn('next');
-    });
-    $('#fullscreen').click(() => {
-      const el = document.documentElement;
-      if (!document.fullscreenElement) el.requestFullscreen();
-      else document.exitFullscreen();
-    });
+<script>
+$(document).ready(function() {
+  // Initialize Flipbook with enhanced realism
+  $("#flipbook").turn({
+    width: 800,
+    height: 500,
+    autoCenter: true,
+    display: 'double',       // Two-page magazine style
+    gradients: true,         // Enable shadows
+    acceleration: true,      // GPU acceleration
+    elevation: 50,           // More page edge bending
+    duration: 1200           // Smooth flip animation
   });
-  </script>
+
+  // Navigation Buttons
+  $("#prev").click(function() {
+    $("#flipbook").turn("previous");
+  });
+
+  $("#next").click(function() {
+    $("#flipbook").turn("next");
+  });
+
+  // Keyboard Navigation
+  $(document).keydown(function(e) {
+    if (e.key === "ArrowLeft") {
+      $("#flipbook").turn("previous");
+    } else if (e.key === "ArrowRight") {
+      $("#flipbook").turn("next");
+    }
+  });
+});
+</script>
+
 </body>
 </html>
-

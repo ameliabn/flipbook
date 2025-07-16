@@ -50,15 +50,12 @@ body {
   object-fit: contain;
 }
 
-/* Hide Turn.js blank pages */
-#flipbook .page-wrapper:first-child,
-#flipbook .page-wrapper:last-child {
+/* Hide empty pages */
+#flipbook .page:empty {
   background: none !important;
   border: none !important;
   box-shadow: none !important;
-  pointer-events: none;
 }
-
 .button {
   position: absolute;
   top: 50%;
@@ -152,6 +149,18 @@ $(document).ready(function() {
     const elem = document.documentElement;
     if (!document.fullscreenElement) elem.requestFullscreen();
     else document.exitFullscreen();
+  });
+
+  // Hide blank pages (after initialization)
+  $("#flipbook .page").each(function() {
+    if ($(this).html().trim() === "") {
+      $(this).css({
+        "background": "none",
+        "border": "none",
+        "box-shadow": "none",
+        "pointer-events": "none"
+      });
+    }
   });
 });
 </script>

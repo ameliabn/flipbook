@@ -26,7 +26,6 @@ body {
   position: relative;
   max-width: 100vw;
   max-height: 100vh;
-  overflow: hidden;
 }
 
 #flipbook {
@@ -113,8 +112,10 @@ body {
 
 <script>
 $(document).ready(function() {
+  const flipbook = $("#flipbook");
+
   // Initialize Flipbook
-  $("#flipbook").turn({
+  flipbook.turn({
     width: 800,
     height: 500,
     autoCenter: true,
@@ -125,45 +126,35 @@ $(document).ready(function() {
     duration: 1200
   });
 
-  // Hide loading message after initialization
-  setTimeout(function() {
-    $("#loading").fadeOut();
-  }, 1000);
+  // Hide loading after initialization
+  setTimeout(() => $("#loading").fadeOut(), 1000);
 
-  // Navigation buttons
-  $("#prev").click(function() {
-    $("#flipbook").turn("previous");
-  });
-  $("#next").click(function() {
-    $("#flipbook").turn("next");
-  });
+  // Navigation
+  $("#prev").click(() => flipbook.turn("previous"));
+  $("#next").click(() => flipbook.turn("next"));
 
   // Keyboard navigation
-  $(document).keydown(function(e) {
-    if (e.key === "ArrowLeft") $("#flipbook").turn("previous");
-    if (e.key === "ArrowRight") $("#flipbook").turn("next");
+  $(document).keydown(e => {
+    if (e.key === "ArrowLeft") flipbook.turn("previous");
+    if (e.key === "ArrowRight") flipbook.turn("next");
   });
 
   // Fullscreen toggle
-  $("#fullscreen").click(function() {
-    let elem = document.documentElement;
-    if (!document.fullscreenElement) {
-      elem.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
+  $("#fullscreen").click(() => {
+    const elem = document.documentElement;
+    if (!document.fullscreenElement) elem.requestFullscreen();
+    else document.exitFullscreen();
   });
 
-  // Dynamic layout for first/last page
-  $("#flipbook").bind("turned", function(event, page) {
-    const totalPages = $("#flipbook").turn("pages");
+  // Keep centering and adjust display mode
+  flipbook.bind("turned", function(event, page) {
+    const totalPages = flipbook.turn("pages");
     if (page === 1 || page === totalPages) {
-      $("#flipbook").turn("display", "single");
-      $("#flipbook").css("width", "400px");
+      flipbook.turn("display", "single");
     } else {
-      $("#flipbook").turn("display", "double");
-      $("#flipbook").css("width", "800px");
+      flipbook.turn("display", "double");
     }
+    flipbook.turn("center");
   });
 });
 </script>

@@ -29,13 +29,13 @@ body {
 }
 
 #flipbook {
-  width: 800px; /* Default width for double-page view */
+  width: 800px; /* Default for double-page view */
   height: 500px;
   perspective: 2000px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   background: #fff;
   margin: auto;
-  transition: width 0.4s ease;
+  transition: width 0.4s ease; /* Smooth resize */
 }
 
 #flipbook .page {
@@ -146,15 +146,15 @@ $(document).ready(function() {
     else document.exitFullscreen();
   });
 
-  // Adjust display mode dynamically (single/double)
-  flipbook.bind("turning", function(event, page) {
+  // Adjust layout after flip completes
+  flipbook.bind("turned", function(event, page) {
     const totalPages = flipbook.turn("pages");
     if (page === 1 || page === totalPages) {
       flipbook.turn("display", "single");
-      flipbook.css("width", "400px"); // Narrow width for single page
+      flipbook.css("width", "400px");
     } else {
       flipbook.turn("display", "double");
-      flipbook.css("width", "800px"); // Full width for magazine view
+      flipbook.css("width", "800px");
     }
     flipbook.turn("center");
   });

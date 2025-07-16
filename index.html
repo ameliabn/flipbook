@@ -77,5 +77,73 @@ body {
   background: rgba(255, 255, 255, 1);
 }
 </style>
+</head>
+<body>
 
+<div id="container">
+  <button id="prev" class="button">&#8592;</button>
+  <div id="flipbook">
+    <div class="page"><img src="pages/page1.svg" alt="Page 1"></div>
+    <div class="page"><img src="pages/page2.svg" alt="Page 2"></div>
+    <div class="page"><img src="pages/page3.svg" alt="Page 3"></div>
+    <div class="page"><img src="pages/page4.svg" alt="Page 4"></div>
+  </div>
+  <button id="next" class="button">&#8594;</button>
+  <button id="fullscreen" class="button">&#x26F6;</button>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Initialize Flipbook
+  $("#flipbook").turn({
+    width: 800,
+    height: 500,
+    autoCenter: true,
+    display: 'double',
+    gradients: true,
+    acceleration: true,
+    elevation: 50,
+    duration: 1200
+  });
+
+  // Navigation buttons
+  $("#prev").click(function() {
+    $("#flipbook").turn("previous");
+  });
+  $("#next").click(function() {
+    $("#flipbook").turn("next");
+  });
+
+  // Keyboard navigation
+  $(document).keydown(function(e) {
+    if (e.key === "ArrowLeft") $("#flipbook").turn("previous");
+    if (e.key === "ArrowRight") $("#flipbook").turn("next");
+  });
+
+  // Fullscreen mode
+  $("#fullscreen").click(function() {
+    let elem = document.documentElement;
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  });
+
+  // Adjust container dynamically for single/double page
+  $("#flipbook").bind("turned", function(event, page) {
+    const totalPages = $("#flipbook").turn("pages");
+    if (page === 1 || page === totalPages) {
+      $("#flipbook").turn("display", "single");
+      $("#flipbook").css("width", "400px");
+    } else {
+      $("#flipbook").turn("display", "double");
+      $("#flipbook").css("width", "800px");
+    }
+  });
+});
+</script>
+
+</body>
+</html>
 
